@@ -1,11 +1,13 @@
 <script>
+  let maxNum = 12;
   let ballCount = $state(1);
   
   function createBalls(count) {
     const balls = [];
     for (let i = 0; i < count; i++) {
       const deg = 30 * i;
-      balls.push({ id: i, deg });
+      const delay = (i / maxNum) * 5;
+      balls.push({ id: i, deg, delay });
     }
     return balls;
   }
@@ -16,9 +18,9 @@
 <main>
   <div class="circle">
     {#each balls as ball (ball.id)}
-      <div 
+      <div
         class="ball"
-        style="--deg: {ball.deg}deg; transform: translate(-50%, -50%) rotate({ball.deg}deg) translate(calc(190px * sin(var(--t))), 0);"
+        style="--deg: {ball.deg}deg; animation-delay: {ball.delay}s;"
       ></div>
     {/each}
   </div>
@@ -28,8 +30,8 @@
     <input 
       type="range" 
       id="ballCount" 
-      min="1" 
-      max="12" 
+      min="0" 
+      max="{maxNum}"
       bind:value={ballCount}
     />
     <span class="ball-count">{ballCount}</span>
@@ -78,13 +80,13 @@
   /* 小球通用样式 */
   .ball {
     width: 12px;
-    height: 12px; 
+    height: 12px;
     background: #18a3e4;
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotate(var(--deg)) translate(calc(190px * sin(var(--t))), 0);
     animation: harmonic 5s linear infinite;
     box-shadow: 0 0 10px rgba(146, 212, 243, 0.8);
   }
@@ -153,29 +155,5 @@
     font-weight: bold;
     min-width: 30px;
     text-align: center;
-  }
-
-  /* 响应式设计 */
-  @media (max-width: 500px) {
-    .circle {
-      width: 300px;
-      height: 300px;
-    }
-    
-    .ball {
-      width: 10px;
-      height: 10px;
-    }
-    
-    @keyframes move {
-      to { 
-        transform: translate(-50%, -50%) rotate(var(--deg)) translateX(100px); 
-      }
-    }
-    
-    .controls {
-      flex-direction: column;
-      gap: 15px;
-    }
   }
 </style>

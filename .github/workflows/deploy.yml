@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: 'npm'
@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Svelte project
+      - name: Build
         run: npm run build
 
       - name: Deploy to GitHub Pages

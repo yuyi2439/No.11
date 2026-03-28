@@ -1,13 +1,15 @@
 <script>
-  let maxNum = 12;
+  const period = 5; // s
+  const maxNum = 12;
   let ballCount = $state(1);
+  let listKey = $state(0); // 用于强制刷新小球列表
   
   function createBalls(count) {
     const balls = [];
     for (let i = 0; i < count; i++) {
-      const deg = 30 * i;
-      const delay = (i / maxNum) * 5;
-      balls.push({ id: i, deg, delay });
+      const deg = (360 / maxNum) * i;
+      const phase = (360 / maxNum) * i;
+      balls.push({ id: i, deg, phase });
     }
     return balls;
   }
@@ -17,24 +19,27 @@
 
 <main>
   <div class="circle">
-    {#each balls as ball (ball.id)}
-      <div
-        class="ball"
-        style="--deg: {ball.deg}deg; animation-delay: {ball.delay}s;"
-      ></div>
-    {/each}
+    {#key listKey}
+      {#each balls as ball (ball.id)}
+        <div
+          class="ball"
+          style="--deg: {ball.deg}deg; --phase: {ball.phase}deg; --period: {period}s;"
+        ></div>
+      {/each}
+    {/key}
   </div>
 
   <div class="controls">
     <label for="ballCount">小球数量：</label>
-    <input 
-      type="range" 
-      id="ballCount" 
-      min="0" 
-      max="{maxNum}"
+    <input
+      type="range"
+      id="ballCount"
+      min="0"
+      max="12"
       bind:value={ballCount}
     />
     <span class="ball-count">{ballCount}</span>
+    <button onclick={() => listKey++}>刷新小球</button>
   </div>
 </main>
 
@@ -65,10 +70,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
     box-shadow:
-      0 0 60px rgba(100, 200, 255, 0.1),
-      inset 0 0 60px rgba(100, 200, 255, 0.05);
+      0 0 30px rgba(88, 223, 76, 0.08),
+      inset 0 0 5px rgba(88, 223, 76, 0.05);
   }
 
   @property --t {
@@ -86,8 +90,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(var(--deg)) translate(calc(190px * sin(var(--t))), 0);
-    animation: harmonic 5s linear infinite;
+    transform: translate(-50%, -50%) rotate(var(--deg)) translate(calc(190px * sin(var(--t) + var(--phase))), 0);
+    animation: harmonic var(--period) linear infinite;
     box-shadow: 0 0 10px rgba(146, 212, 243, 0.8);
   }
 
@@ -100,20 +104,19 @@
   /* 控制面板 */
   .controls {
     margin-top: 40px;
-    width: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
     padding: 20px 30px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(75, 197, 235, 0.425);
     border-radius: 15px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .controls label {
-    color: #fff;
+    color: #000000;
     font-size: 16px;
     font-weight: 500;
   }
@@ -155,5 +158,26 @@
     font-weight: bold;
     min-width: 30px;
     text-align: center;
+  }
+
+  .controls button {
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .controls button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+  }
+
+  .controls button:active {
+    transform: scale(0.95);
   }
 </style>

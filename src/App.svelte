@@ -1,14 +1,17 @@
 <script>
+  import Sidebar from "../Sidebar.svelte";
+
   const period = 5; // s
-  const maxNum = 12;
   let ballCount = $state(1);
   let listKey = $state(0); // 用于强制刷新小球列表
+  let isPaused = $state(false);
   
   function createBalls(count) {
     const balls = [];
+    const step = 180 / count;
     for (let i = 0; i < count; i++) {
-      const deg = (360 / maxNum) * i;
-      const phase = (360 / maxNum) * i;
+      const deg = step * i;
+      const phase = step * i;
       balls.push({ id: i, deg, phase });
     }
     return balls;
@@ -17,8 +20,10 @@
   let balls = $derived(createBalls(ballCount));
 </script>
 
+<Sidebar bind:isPaused />
+
 <main>
-  <div class="circle" style="--period: {period}s;">
+  <div class="circle" style="--period: {period}s; animation-play-state: {isPaused ? 'paused' : 'running'};">
     {#key listKey}
       {#each balls as ball (ball.id)}
         <div
@@ -57,6 +62,7 @@
     justify-content: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
+    margin-right: 200px;
   }
 
   /* 大圆容器 */

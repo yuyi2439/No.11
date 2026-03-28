@@ -18,12 +18,12 @@
 </script>
 
 <main>
-  <div class="circle">
+  <div class="circle" style="--period: {period}s;">
     {#key listKey}
       {#each balls as ball (ball.id)}
         <div
           class="ball"
-          style="--deg: {ball.deg}deg; --phase: {ball.phase}deg; --period: {period}s;"
+          style="--deg: {ball.deg}deg; --phase: {ball.phase}deg;"
         ></div>
       {/each}
     {/key}
@@ -31,7 +31,7 @@
 
   <div class="controls">
     <label for="ballCount">小球数量：</label>
-    <input
+    <input onclick={() => listKey++}
       type="range"
       id="ballCount"
       min="0"
@@ -39,7 +39,6 @@
       bind:value={ballCount}
     />
     <span class="ball-count">{ballCount}</span>
-    <button onclick={() => listKey++}>刷新小球</button>
   </div>
 </main>
 
@@ -73,12 +72,13 @@
     box-shadow:
       0 0 30px rgba(88, 223, 76, 0.08),
       inset 0 0 5px rgba(88, 223, 76, 0.05);
+    animation: harmonic var(--period) linear infinite;
   }
 
   @property --t {
     syntax: '<angle>';
     initial-value: 0deg;
-    inherits: false;
+    inherits: true;
   }
 
   /* 小球通用样式 */
@@ -91,7 +91,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(var(--deg)) translate(calc(190px * sin(var(--t) + var(--phase))), 0);
-    animation: harmonic var(--period) linear infinite;
     box-shadow: 0 0 10px rgba(146, 212, 243, 0.8);
   }
 
@@ -153,31 +152,10 @@
   }
 
   .ball-count {
-    color: #00d4ff;
+    color: #0099ff;
     font-size: 24px;
     font-weight: bold;
     min-width: 30px;
     text-align: center;
-  }
-
-  .controls button {
-    padding: 10px 20px;
-    background: linear-gradient(90deg, #00d4ff, #7b2ff7);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .controls button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
-  }
-
-  .controls button:active {
-    transform: scale(0.95);
   }
 </style>

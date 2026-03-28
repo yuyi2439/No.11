@@ -14,11 +14,11 @@ function createBalls(count) {
     ball.className = 'ball';
     
     // 计算每个小球的角度
-    const deg = (360 / count) * i;
+    const deg = 30 * i;
     ball.style.setProperty('--deg', `${deg}deg`);
     
     // 设置旋转角度
-    ball.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`;
+    ball.style.transform = `translate(-50%, -50%) rotate(${deg}deg) translate(calc( 190px * sin( var(--t) ) ), 0)`;
     
     circle.appendChild(ball);
   }
@@ -31,5 +31,4 @@ ballCountInput.addEventListener('input', (e) => {
   createBalls(count);
 });
 
-// 初始化
-createBalls(8);
+createBalls(1);

@@ -30,6 +30,12 @@ body {
     inset 0 0 60px rgba(100, 200, 255, 0.05);
 }
 
+@property --t {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 /* 小球通用样式 */
 .ball {
   width: 12px;
@@ -39,26 +45,24 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(var(--deg));
-  animation: move 2s ease-in-out infinite alternate;
+  transform: translate(-50%, -50%);
+  animation: harmonic 5s linear infinite;
   box-shadow: 0 0 10px rgba(146, 212, 243, 0.8);
 }
 
-/* 简谐振动：从中心往外侧来回 */
-@keyframes move {
-  from { 
-    transform: translate(-50%, -50%) rotate(var(--deg)) translateX(-190px); 
-  }
-  to { 
-    transform: translate(-50%, -50%) rotate(var(--deg)) translateX(190px); 
-  }
+/* 🔥 只有两个关键帧：纯数学正弦运动 */
+@keyframes harmonic {
+  0% { --t: 0deg; }
+  100% { --t: 360deg; }
 }
 
 /* 控制面板 */
 .controls {
   margin-top: 40px;
+  width: 400px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   padding: 20px 30px;
   background: rgba(255, 255, 255, 0.1);
